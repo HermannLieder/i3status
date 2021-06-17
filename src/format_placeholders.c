@@ -43,7 +43,8 @@ char *format_placeholders(const char *format, placeholder_t *placeholders, int n
     /* Now we can parse the format string. */
     char buffer[buffer_len];
     char *outwalk = buffer;
-    for (const char *walk = format; *walk != '\0'; walk++) {
+    for (const char *walk = format; *walk != '\0'; walk++) 
+    {
         if (*walk != '%') {
             *(outwalk++) = *walk;
             continue;

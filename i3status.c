@@ -648,8 +648,10 @@ int main(int argc, char *argv[]) {
 
     void **per_instance = calloc(cfg_size(cfg, "order"), sizeof(*per_instance));
 
-    while (1) {
-        if (exit_upon_signal) {
+    while (1) 
+    {
+        if (exit_upon_signal) 
+        {
             fprintf(stderr, "i3status: exiting due to signal.\n");
             exit(1);
         }
@@ -660,7 +662,8 @@ int main(int argc, char *argv[]) {
         else if (output_format == O_TERM)
             /* Restore the cursor-position, clear line */
             printf("\033[u\033[K");
-        for (j = 0; j < cfg_size(cfg, "order"); j++) {
+        for (j = 0; j < cfg_size(cfg, "order"); j++) 
+        {
             cur_instance = per_instance + j;
             if (j > 0)
                 print_separator(separator);
@@ -739,7 +742,15 @@ int main(int argc, char *argv[]) {
 
             CASE_SEC_TITLE("tztime") {
                 SEC_OPEN_MAP("tztime");
-                print_time(json_gen, buffer, title, cfg_getstr(sec, "format"), cfg_getstr(sec, "timezone"), cfg_getstr(sec, "locale"), cfg_getstr(sec, "format_time"), cfg_getbool(sec, "hide_if_equals_localtime"), tv.tv_sec);
+                print_time(json_gen, 
+                           buffer, 
+                           title, 
+                           cfg_getstr(sec, "format"), 
+                           cfg_getstr(sec, "timezone"), 
+                           cfg_getstr(sec, "locale"), 
+                           cfg_getstr(sec, "format_time"), 
+                           cfg_getbool(sec, "hide_if_equals_localtime"), 
+                           tv.tv_sec);
                 SEC_CLOSE_MAP;
             }
 

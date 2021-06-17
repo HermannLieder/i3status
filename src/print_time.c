@@ -10,11 +10,88 @@
 
 #include "i3status.h"
 
+#define SET_KANJI           \
+        switch(get_wd())    \
+        {                   \
+            case 0:
+            kanji = "日";
+            break;
+
+            case 1:
+            kanji = "月";
+            break;
+
+            case 2:
+
+        }
+
 #define STRING_SIZE 50
 
 static bool local_timezone_init = false;
 static const char *local_timezone = NULL;
 static const char *current_timezone = NULL;
+
+int get_wd(void)
+{
+    int d, m, y;
+    time_t time(NULL);
+    struct tm tm = *localtime(&t);
+    d = tm.tm_mday;
+    m = tm.tm_mon + 1;
+    y = tm.tm_year + 1900;
+
+    return (d += m < 3 ? y-- : y - 2, 23*m/9 + d + 4 + y/4- y/100 + y/400)%7;
+}
+
+char* k_substitution(const char * string_time)
+{
+    char* token;
+    char kanji[] = "月";
+
+    switch(get_wd())    
+    {                   
+        case 0:
+        kanji = "日";
+        break;
+
+        case 1:
+        kanji = "月";
+        break;
+
+        case 2:
+        kanji = "火";
+        break;
+
+        case 3:
+        kanji = "水";
+        break;
+
+        case 4:
+        kanji = "木"
+        break;
+
+        case 5:
+        kanji = "金";
+        break;
+
+        case 6:
+        kanji = "土";
+        break;
+    }
+
+    char string_out[STRING_SIZE];
+    token = strtok(string_time, "K")
+
+    while(token != NULL)
+    {
+        strcat(string_out, token);
+        token = strtok(string_time, "K");
+        if(token != NULL)
+            strcat(string_out, kanji);
+    }
+
+    return string_out;
+}
 
 void set_timezone(const char *tz) {
     if (!local_timezone_init) {
@@ -37,7 +114,16 @@ void set_timezone(const char *tz) {
     tzset();
 }
 
-void print_time(yajl_gen json_gen, char *buffer, const char *title, const char *format, const char *tz, const char *locale, const char *format_time, bool hide_if_equals_localtime, time_t t) {
+void print_time(yajl_gen json_gen, 
+                char *buffer, 
+                const char *title, 
+                const char *format, 
+                const char *tz, 
+                const char *locale, 
+                const char *format_time, 
+                bool hide_if_equals_localtime, 
+                time_t t) 
+{
     char *outwalk = buffer;
     struct tm local_tm, tm;
 
