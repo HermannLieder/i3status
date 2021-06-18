@@ -10,21 +10,6 @@
 
 #include "i3status.h"
 
-#define SET_KANJI           \
-        switch(get_wd())    \
-        {                   \
-            case 0:
-            kanji = "日";
-            break;
-
-            case 1:
-            kanji = "月";
-            break;
-
-            case 2:
-
-        }
-
 #define STRING_SIZE 50
 
 static bool local_timezone_init = false;
@@ -34,7 +19,7 @@ static const char *current_timezone = NULL;
 int get_wd(void)
 {
     int d, m, y;
-    time_t time(NULL);
+    time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     d = tm.tm_mday;
     m = tm.tm_mon + 1;
@@ -47,50 +32,52 @@ char* k_substitution(const char * string_time)
 {
     char* token;
     char kanji[] = "月";
+    
 
     switch(get_wd())    
     {                   
         case 0:
-        kanji = "日";
+        strcpy(kanji, "日");
         break;
 
         case 1:
-        kanji = "月";
+        strcpy(kanji, "月");
         break;
 
         case 2:
-        kanji = "火";
+        strcpy(kanji, "火");
         break;
 
         case 3:
-        kanji = "水";
+        strcpy(kanji, "水");
         break;
 
         case 4:
-        kanji = "木"
+        strcpy(kanji, "木");
         break;
 
         case 5:
-        kanji = "金";
+        strcpy(kanji, "金");
         break;
 
         case 6:
-        kanji = "土";
+        strcpy(kanji, "土");
         break;
     }
-
-    char string_out[STRING_SIZE];
-    token = strtok(string_time, "K")
-
+    
+    char string_out[STRING_SIZE] = "";
+    token = strtok(string_time, "K");
+    
     while(token != NULL)
     {
+        //printf("loop entered\n");
         strcat(string_out, token);
-        token = strtok(string_time, "K");
+        token = strtok(NULL, "K");
         if(token != NULL)
             strcat(string_out, kanji);
     }
-
-    return string_out;
+    
+    return sstrdup(string_out);
 }
 
 void set_timezone(const char *tz) {
@@ -166,8 +153,7 @@ void print_time(yajl_gen json_gen,
 
 out:
     *outwalk = '\0';
+    buffer = k_substitution(buffer);
     OUTPUT_FULL_TEXT(buffer);
-    if (format_time != NULL) {
-        free(buffer);
-    }
+    free(buffer);
 }
