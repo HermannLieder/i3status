@@ -30,6 +30,9 @@ int get_wd(void)
 
 char* k_substitution(const char * string_time)
 {
+    if(strchr(string_time, 'K') == NULL)
+        return sstrdup(string_time);
+
     char* token;
     char kanji[] = "月";
     
